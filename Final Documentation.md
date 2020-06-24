@@ -74,13 +74,9 @@ _ **Attribute Information:** _
 
 Load &quot;Online Retail&quot; data set into statistical software &quot;R&quot; for our further analysis.
 
-![](RackMultipart20200624-4-1atjyy4_html_cf736bc5a7508a4a.png)
+![alt text](https://github.com/gsebehat/Online-Retail-Project/blob/master/Images/Picture%201.png)
 
-![](RackMultipart20200624-4-1atjyy4_html_afb87adcbb84e723.png)
-
-![](RackMultipart20200624-4-1atjyy4_html_6d74f2ef1f3280e1.png)
-
-![](RackMultipart20200624-4-1atjyy4_html_2616a484808d4ad4.png)
+![alt text](https://github.com/gsebehat/Online-Retail-Project/blob/master/Images/Picture%202.png)
 
 - **Pre-processing of the Data set**
 
@@ -91,9 +87,7 @@ Explore the data set and we encounter the need we will pre-process the data set 
 - check for any NAs in data set.
 - any cancelled transactions.
 
-![](RackMultipart20200624-4-1atjyy4_html_e6975f2ed6742555.png)
 
-![](RackMultipart20200624-4-1atjyy4_html_aaa7b519343f6da6.png)
 
 As the above result shows, Customer ID variable has 135080 NAs
 
