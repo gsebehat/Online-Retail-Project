@@ -95,7 +95,7 @@ Explore the data set and we encounter the need we will pre-process the data set 
 
 As the above result shows, Customer ID variable has 135080 NAs
 
-![](RackMultipart20200624-4-1atjyy4_html_37472e0e53affb57.png)
+![](https://github.com/gsebehat/Online-Retail-Project/blob/master/Images/Picture%206.jpg)
 
 ![](RackMultipart20200624-4-1atjyy4_html_bdbc6d59fd7c3fab.png)
 
