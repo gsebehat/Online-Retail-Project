@@ -78,6 +78,10 @@ Load &quot;Online Retail&quot; data set into statistical software &quot;R&quot; 
 
 ![alt text](https://github.com/gsebehat/Online-Retail-Project/blob/master/Images/Picture%202.png)
 
+![alt text](https://github.com/gsebehat/Online-Retail-Project/blob/master/Images/Picture%203.png)
+
+![alt text](https://github.com/gsebehat/Online-Retail-Project/blob/master/Images/Picture%204.jpg)
+
 - **Pre-processing of the Data set**
 
 Explore the data set and we encounter the need we will pre-process the data set to make it suitable for our further analysis of clustering of customers and prediction of sales.
