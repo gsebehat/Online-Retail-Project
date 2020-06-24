@@ -91,7 +91,7 @@ Explore the data set and we encounter the need we will pre-process the data set 
 - check for any NAs in data set.
 - any cancelled transactions.
 
-
+![alt text](https://github.com/gsebehat/Online-Retail-Project/blob/master/Images/Picture%205.jpg)
 
 As the above result shows, Customer ID variable has 135080 NAs
 
