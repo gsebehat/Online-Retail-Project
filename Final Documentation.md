@@ -101,15 +101,15 @@ As the above result shows, Customer ID variable has 135080 NAs
 
 ![alt text](https://github.com/gsebehat/Online-Retail-Project/blob/master/Images/Picture%208.jpg)
 
-![alt text]()
+![alt text](https://github.com/gsebehat/Online-Retail-Project/blob/master/Images/Picture%209.jpg)
 
-![alt text]()
+![alt text](https://github.com/gsebehat/Online-Retail-Project/blob/master/Images/Picture%2010.jpg)
 
 Looking at the size of the dataset and the missing value plot, it seems as if I can remove the missing values and still have a good-sized set of data to work on, I thus let me remove the missing values
 
 Remove NAs
 
-![alt text]()
+![alt text](https://github.com/gsebehat/Online-Retail-Project/blob/master/Images/Picture%2011.jpg)
 
 **Pre-processing\_2**
 
@@ -117,17 +117,17 @@ Remove NAs
 - Create &quot;Month&quot;, &quot;Month\_Yr&quot;, Year&quot;, &quot;Day&quot;, &quot;HourOfDay&quot; and &quot;DayOfWeek&quot; variables to work with future analysis
 - add a new variable for &quot;Revenue&quot; (unit price \* quantity).
 
-![alt text]()
+![alt text](https://github.com/gsebehat/Online-Retail-Project/blob/master/Images/Picture%2012.jpg)
 
-![alt text]()
+![alt text](https://github.com/gsebehat/Online-Retail-Project/blob/master/Images/Picture%2013.jpg)
 
-![alt text]()
+![alt text](https://github.com/gsebehat/Online-Retail-Project/blob/master/Images/Picture%2014.jpg)
 
-![alt text]()
+![alt text](https://github.com/gsebehat/Online-Retail-Project/blob/master/Images/Picture%2015.jpg)
 
-![alt text]()
+![alt text](https://github.com/gsebehat/Online-Retail-Project/blob/master/Images/Picture%2016.jpg)
 
-![alt text]()
+![alt text](https://github.com/gsebehat/Online-Retail-Project/blob/master/Images/Picture%2017.jpg)
 
 **Explanatory data analysis (EDA)**
 
@@ -135,7 +135,7 @@ Remove NAs
 - Avoids any potential anomalies in data to avoid feeding incorrect data to a machine learning model
 - Clarify the model output and test the assumptions
 
-![alt text]()
+![alt text](https://github.com/gsebehat/Online-Retail-Project/blob/master/Images/Picture%2018.jpg)
 
 Based on the above output we know that the numbers of customers from Australia is 1182, from Austria is 398, from Bahrain is 17, from Germany is 9040, from Saudi Arabia is 9 and so on. So, the country with the most customers is in the United Kingdom with 354321 customers.
 
