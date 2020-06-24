@@ -1,0 +1,206 @@
+---
+title: "MSDS692 Practicum I - Online Retail Data Set"
+author: "Genet Sebehat"
+date: "5/10/2020"
+output:
+  pdf_document: default
+  word_document: default 
+  html_document: default
+---
+
+```{r setup, include=FALSE} 
+
+# Format R Code Automatically
+library(formatR)       
+
+knitr::opts_chunk$set(echo=TRUE, warning=FALSE, message=FALSE)
+# Set so that long lines in R will be wrapped:
+knitr::opts_chunk$set(tidy.opts=list(width.cutoff=80), tidy=TRUE)
+options(tinytex.verbose = TRUE) 
+
+``` 
+
+
+```{r create_tryCatch}
+x <- tryCatch(stop("Error"), error = function(e) e)
+class(x)  
+```
+
+# Setup environment - clearing it out and loading any necessary libraries.
+```{r setup_environment}
+# Removes all objects to prevent results from previous runs being carried over into new runs
+rm(list = ls()) 
+# Clears the graphic plots window
+graphics.off() 
+# Clears the console
+cat("\014")     
+getwd()
+setwd("C:/Users/owner/Desktop/Regis University/MSDS692/Week 1")
+```
+
+# R library returns the list of loaded (or available) packages.
+```{r load_libraries} 
+library(dplyr)
+library(car)
+library(caret)
+library(carData)
+library(caTools)
+library(e1071)
+library(gbm)
+library(ggplot2)    
+library(lattice)
+library(lubridate)  
+library(plotly)   
+library(randomForest)
+library(rpart)
+library(rpart.plot) 
+library(readxl)   
+```
+
+# Load data
+```{r load_data}
+#specify the path to load the Online Retail excel file
+OnlineRetail6 <- read_excel("C:/Users/owner/Desktop/Regis University/MSDS692/Week 1/Online Retail.xlsx")
+
+```
+
+# Create str fuction to display the structure of an R object a compact way 
+```{r create_str_function}
+# Create str fun
+str(OnlineRetail6)
+```
+
+# Create colSums fuction
+```{r check_NAs}
+# any NAs in data set?
+colSums(is.na(OnlineRetail6))
+```
+
+# Create new variable
+```{r add_new_variable}
+# Exclude negative quantities
+OnlineRetail6 <- subset(OnlineRetail6, Quantity > 0 & UnitPrice > 0)
+
+# Adding a new variable for revenue (unit price * quantity) per line:
+OnlineRetail6$Revenue  = with(OnlineRetail6, OnlineRetail6$Quantity*OnlineRetail6$UnitPrice)
+
+# Convert number type variable to double
+OnlineRetail6$Revenue <- as.double(OnlineRetail6$Revenue)
+
+```
+
+# Check cancelled invoice
+```{r}
+# any cancelled invoices?
+table(grepl("^C", OnlineRetail6$InvoiceNo))
+```
+
+# Create spply function takes data frame as input and gives output in vector or matrix
+```{r find_missing_values}
+#Check missing values for each column
+sapply(OnlineRetail6, function(x) sum(is.na(x)))
+```
+
+#Data Preprocessing - handling na's
+```{r create_preprocess_data}
+#Remove missing value
+OnlineRetail7 <- na.omit(OnlineRetail6)
+
+#Check missing values for each column
+sapply(OnlineRetail7, function(x) sum(is.na(x)))
+```
+
+# Create to use only few rows
+```{r create_few_rows}
+#Create few rows
+OnlineRetail7 <- OnlineRetail7[c(2:1000),]
+```
+
+# Create partition
+```{r create_split_data}
+# Create Partition
+index = createDataPartition(y=OnlineRetail7$Revenue, p=0.7, list=FALSE)
+
+# Split to train and test
+train = OnlineRetail7[index,]
+test = OnlineRetail7[-index,]
+
+```
+
+# Create dim function
+```{r create_dim_test}
+# create dim fun
+dim(train)
+dim(test)
+```
+
+# Create rf model
+```{r create_model1}
+# fit the model
+set.seed(123)
+rf_model = train(Revenue ~., data=train, 
+               method="rf", 
+               prox=TRUE,
+               trControl = trainControl(method = "cv"))
+
+rf_model
+
+```
+
+# Create getTree function
+```{r Create_getTree_fun}
+# 2ND TREE 
+gettree <- getTree(rf_model$finalModel, k=2)
+head(gettree, n=10)
+
+```
+
+# Create KNN model
+```{r create_model2}
+# Create KNN model
+set.seed(123)
+knn_model = train(Revenue ~., data=train, 
+               method="knn", 
+               prox=TRUE,
+               trControl = trainControl(method = "cv"))
+
+knn_model
+```
+
+# Create linear regression model
+```{r create_model4}
+# fit the model-Linear Regression 
+set.seed(123)
+lr_model = train(Revenue ~., data=train, 
+               method="lm", 
+               prox=TRUE,
+               trControl = trainControl(method = "cv"))
+
+lr_model
+
+```
+
+# Random forests are usually one of the top performing algorithms along with boosting in any prediction contests.
+
+# They are often difficult to interpret because of these multiple trees that we’re fitting but they can be very accurate for a wide range of problems.
+
+# Create prediction
+```{r create_predict}
+# Create predict model
+pred = predict(rf_model, train)
+
+# add a column in test set for prediction TRUE or FALSE:
+train$predRight = pred == train$Revenue
+ 
+# Create table
+ptable <- table(pred, train$Revenue)
+
+```
+
+# Create attributes function returns the object's attribute list
+```{r create_attributes}
+# Create attributes function
+attributes(rf_model)
+```
+
+

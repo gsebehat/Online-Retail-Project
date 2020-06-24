@@ -1,0 +1,508 @@
+---
+title: "MSDS692 Practicum I - Online Retail Data Set"
+author: "Genet Sebehat"
+date: "5/10/2020"
+output:
+  pdf_document: default
+  word_document: default 
+  html_document: default
+---
+
+```{r setup, include=FALSE} 
+library(formatR)       # Format R Code Automatically
+knitr::opts_chunk$set(echo=TRUE, warning=FALSE, message=FALSE)
+# Set so that long lines in R will be wrapped:
+knitr::opts_chunk$set(tidy.opts=list(width.cutoff=80), tidy=TRUE)
+options(tinytex.verbose = TRUE)   
+``` 
+
+```{r create_tryCatch}
+x <- tryCatch(stop("Error"), error = function(e) e)
+class(x) 
+```
+# Online Retail Project
+
+# Introduction: The goal of the project is to use data science techniques to identify, define, and analyze business problems. Moreover, my aim with this project is to gain analytics experience and to reconcile mathematical theory with business practice.
+
+# Data set description: This is a transnational data set which contains all the transactions occurring between 12/01/2010 and 12/09/2011 for a UK-based and registered non-store online retail.The company mainly sells unique all-occasion gifts. Many customers of the company are wholesalers. 
+
+# Setup environment - clearing it out and loading any necessary libraries.
+```{r setup_environment}
+# Removes all objects to prevent results from previous runs being carried over into new runs
+rm(list = ls()) 
+# Clears the graphic plots window
+graphics.off() 
+# Clears the console
+cat("\014")     
+getwd()
+setwd("C:/Users/owner/Desktop/Regis University/MSDS692/Week 1")
+```
+
+# R library returns the list of loaded (or available) packages.
+```{r load_libraries} 
+library(DataExplorer) 
+library(datasets)   
+library(DT)           
+library(dplyr)        
+library(ellipsis)     
+library(ggplot2)    
+library(lattice)      
+library(lubridate)   
+library(readxl)       
+library(rfm)        
+library(tinytex)      
+```
+
+# Load the data
+# The raw data includes 541909 observations of 8 variables. I omitted 136534 missing observations and the new data set has 406829 observations.
+```{r load_data}
+# Specify the path to load the online_retail_II excel file
+OnlineRetail1 <- read_excel("C:/Users/owner/Desktop/Regis University/MSDS692/Week 1/Online Retail.xlsx")
+```
+
+# Create dim function that returns the dimension (e.g. the number of columns and rows) of a matrix, array or data frame
+```{r create_dim}
+# The dim function of returns the dimension (e.g. the number of columns and rows) of data frame
+dim(OnlineRetail1)
+```
+
+# Create str function to display the structure of an R object in compact way
+```{r structure_of_data}
+# Display the structure of an R object
+str(OnlineRetail1)
+```
+
+# Data Cleaning 
+ 
+# Create colnames to retrieve column names 
+```{r create_col_name}
+# list of column name
+colnames(OnlineRetail1)
+```
+# Create head function to return the first parts of a data frame
+```{r view_first_few_rows}
+#view the first few rows
+head(OnlineRetail1)
+```
+
+# Pre-processing of the Data set:
+
+# Create sapply() takes data frame as input and gives output in vector or matrix
+```{r find_missing_values}
+# check missing values for each column
+sapply(OnlineRetail1, function(x) sum(is.na(x)))
+```
+
+# Create plot_missing()returns and plots frequency of missing values for each feature
+```{r plot_missing_value}
+# Create plot to find the missing value of the data set
+plot_missing(OnlineRetail1, geom_label_args = list("size" = 4, "label.padding" = unit(0.2, "lines")))
+```
+
+# Looking at the size of the dataset and the missing value plot, it seems as if I can remove the missing values and still have a good-sized set of data to work on, I thus let me remove the missing values
+
+# Create na.omit() returns the object with listwise deletion of missing values
+```{r create_new_dataset}
+# Create new dataset without missing data
+OnlineRetail2 <- na.omit(OnlineRetail1)
+
+```
+
+# Create colSums() computes the sums of matrix or array columns
+```{r check_missing_val}
+# Check the new dataset missing value after omitted null values
+colSums(is.na(OnlineRetail2))
+```
+
+# Create table() uses the cross-classifying factors to build a possibility table of the counts at each combination of factor levels.
+```{r create_tocheck_canceled_inv}
+# any canceled invoices?
+table(grepl("^C", OnlineRetail1$InvoiceNo))
+```
+# 9288 canceled transactions
+
+# Format the date
+```{r split_columns}
+# Separate date and time components of invoice date
+OnlineRetail2$Date <- as.Date(OnlineRetail2$InvoiceDate) 
+OnlineRetail2$Time <- format(as.POSIXct(OnlineRetail2$InvoiceDate),format = "%H:%M")
+```
+
+# Create "Month", "Month_Yr", Year", "Day", "HourOfDay" and "DayOfWeek" variables to work with future analysis 
+```{r create_new_variables}
+# create month, day, year and hour of day variables 
+OnlineRetail2$Month <- month(OnlineRetail2$Date, label=TRUE)
+OnlineRetail2$Month_Yr <- as.character(OnlineRetail2$Date, format="%b-%Y")
+OnlineRetail2$Year <- year(OnlineRetail2$Date)
+
+OnlineRetail2$Day <- day(OnlineRetail2$Date)
+
+OnlineRetail2$HourOfDay <- hour(as.POSIXlt(OnlineRetail2$Time, format = "%H"))
+
+OnlineRetail2$DayOfWeek <- wday(OnlineRetail2$Date, label=TRUE)
+```
+
+# Create subset logical expression indicating elements
+```{r add_new_variable}
+#exclude negative quantities
+OnlineRetail2 <- subset(OnlineRetail2, Quantity > 0 & UnitPrice > 0)
+
+```
+
+# Create with() applys an expression to a dataset
+```{r add_new_variable}
+#adding a new variable for revenue (unit price * quantity) per line:
+OnlineRetail2$Revenue = with(OnlineRetail2, OnlineRetail2$Quantity*OnlineRetail2$UnitPrice)
+```
+
+# Convert revenue variable to double
+```{r create_convert_var}
+# Convert revenue variable to double
+OnlineRetail2$Revenue <- as.double(OnlineRetail2$Revenue)
+```
+
+# Create summary() is a generic function used to produce result summaries of the results of various model fitting functions
+```{r create_summary}
+# Create Summary
+summary(OnlineRetail2)
+
+```
+
+# Exploratory Data Analysis (EDA)important as stated below:
+# Exploring and visualizing data help to validate the business assumptions with thorough investigation 
+# Advert any potential anomalies in data to avoid feeding wrong data to a machine learning model
+# Clarify the model output and test the assumptions
+
+# What is the frequency distribution of customers by country?
+```{r create_freq_dis}
+# The frequency distribution of customers based on each Country
+table(OnlineRetail2$Country, deparse.level = 1)
+
+```
+
+# Based on the above output we know that the numbers of customers from Australia is 1182, from Austria is 398, from Bahrain is 17, from Germany is 9040, from Saudi Arabia is 9 and so on. So, the country with the most customers is in the United Kingdom with 354321 customers
+
+# The majority of transactions came from UK customers, I divided customers into UK-based and other nationalities and calculated the net quantities of items purchases and returned by day and country
+
+# Create ggplot() to declare the input data frame for a graphic and to specify the set of plot aesthetics intended to be common throughout all subsequent layers unless specifically overridden.
+```{r create_Freq_dis_plot}
+# Frequency distribution of customers based on each Country 
+ggplot(OnlineRetail2,aes(x=Country,y=Revenue, color = Revenue)) + geom_bar(stat = "identity") + coord_flip() + labs(title="Freq distribution of customers based on each Country")
+
+```
+
+# The top most Countries contributing to revenue in 2010 and 2011
+```{r create_2010_ggplot}
+CtryByGroup2010 <- aggregate(Revenue~Country+Year,OnlineRetail2,sum)
+
+CtryByGroup2011 <- subset(CtryByGroup2010, Year=="2011")
+CtryByGroup2010 <- subset(CtryByGroup2010,Year=="2010")
+CtryByGroup2010 <- CtryByGroup2010[with(CtryByGroup2010,order(-Revenue)),]
+CtryByGroup2011 <- CtryByGroup2011[with(CtryByGroup2011,order(-Revenue)),]
+
+CtryByGroup2010$Country <- factor(CtryByGroup2010$Country,levels=CtryByGroup2010$Country[order(CtryByGroup2010$Revenue)])
+
+CtryByGroup2011$Country <- factor(CtryByGroup2011$Country,levels=CtryByGroup2011$Country[order(CtryByGroup2011$Revenue)])
+
+ggplot(CtryByGroup2010, aes(x=Country,y=Revenue, color = Country)) + geom_bar(stat = "identity") + coord_flip() + labs(title="Countries ranking by 2010 revenue")
+
+head(CtryByGroup2010, n= 20, order(-Cuntry))
+```
+
+# Create ggplot() to plot countries ranking by 2011
+```{r create_2011_ggplot}
+# Plot countries ranking by 2011 
+ggplot(CtryByGroup2011,aes(x=Country,y=Revenue, color = Country)) + geom_bar(stat = "identity") + coord_flip() + labs(title="Countries ranking by 2011 revenue")
+
+head(CtryByGroup2011, n= 20, order(-Cuntry))
+```
+
+# Create boxplot() function for Revenue variable by group Outlier
+```{r create_boxplot}
+#Check for Outlier based on Revenue
+boxplot(OnlineRetail2$Revenue)
+
+```
+
+# Top 6 Selling products by sales revenue in 2010 and 2011
+```{r create_2010_rev_plot}
+Top_10 <- aggregate(Revenue~Description+Year,OnlineRetail2,sum)
+Top_11 <- subset(Top_10, Year=="2011")
+Top_10 <- subset(Top_10,Year=="2010")
+Top_10 <- head(Top_10[with(Top_10,order(-Revenue)),])
+Top_11 <- head(Top_11[with(Top_11,order(-Revenue)),])
+Top_10$Description <- factor(Top_10$Description,levels=Top_10$Description[order(Top_10$Revenue)])
+Top_11$Description <- factor(Top_11$Description,levels=Top_11$Description[order(Top_11$Revenue)])
+ggplot(Top_10,aes(x=Description,y=Revenue)) + geom_bar(stat = "identity", fill = "forest green", color = "gold") + labs(title="Top 6 Selling products by sales revenue in 2010") + coord_flip()
+
+```
+
+# As the above ggplot shows, the “Regency cake stand 3 tier” has the most sales revenue in 2010. 
+
+# Create ggplot to display the top six product by sales revenue in 2011
+```{r create_2011_rev_plot}
+# Create ggplot
+ggplot(Top_11,aes(x=Description,y=Revenue, color = Revenue)) + geom_bar(stat = "identity") + labs(title="Top 6 Selling products by sales revenue in 2011") + coord_flip()
+
+```
+
+# As the above ggplot shows, the “Paper craft, Little birdie” has the most sales revenue in 2011.
+
+# Create ggplot for amount of revenue by day of week
+```{r create_rev_by_dayofweek}
+# create revenue by day of week
+OnlineRetail2$DayOfWeek <- as.factor(OnlineRetail2$DayOfWeek)
+
+OnlineRetail2 %>%
+  group_by(DayOfWeek) %>%
+  summarise(Revenue = sum(Revenue)) %>%
+  ggplot(aes(x = DayOfWeek, y = Revenue, fill = DayOfWeek)) + geom_col() + labs(x = 'DayOfWeek', y = 'Revenue (£)', title = 'Revenue by Day of Week') 
+
+```
+
+# There are no transactions on Saturday throughout the whole period. I think behind the scene there are an issue in the context of the metadata of the dataset #As shown the above plot, a trend where the number of transaction increases from Sunday to Tuesday and decrease on Wednesday.  Again, the trend were the number of transaction increases from Wednesday to Friday.  
+
+# Create a table that we can use to look at what's going on at the day of the week level in a bit more detail.
+```{r create_new_df1}
+SummaryOfWeekDay <- OnlineRetail2 %>%
+  group_by(Date, DayOfWeek) %>%
+  summarise(Revenue = sum(Revenue), Transactions = n_distinct(InvoiceNo)) %>%
+  mutate(AveOrder = (round((Revenue / Transactions),2))) %>%
+  ungroup()
+
+head(SummaryOfWeekDay, n=10)
+
+```
+
+# As shown the above table, the biggest transaction (137) had made on Thursday. We can justify "Revenue by Day of Week" graph looks good.
+
+# Performance of the top six monthly selling products in 2010 and 2011
+```{r create_mon_sold_10}
+# Performance of the top six monthly selling products in 2010 and 2011
+T_mon_sold_2010 <- subset(OnlineRetail2,Description %in% 
+c(as.vector(Top_10$Description)), select = 
+c(InvoiceNo,Description,Quantity,InvoiceDate,CustomerID,Revenue,Month))
+
+T_mon_sold_2011 <- subset(OnlineRetail2,Description %in% c(as.vector(Top_11$Description)), select = c(InvoiceNo,Description,Quantity,InvoiceDate,CustomerID,Revenue,Month))
+
+ggplot(T_mon_sold_2010, aes(x = Month, y = Revenue, color = Month)) + facet_wrap(~Description, ncol=2) + 
+    geom_bar(stat="identity") +  labs(title = "Sales by month in 2010", x = "Month", y = "Sales Revenue 2010") 
+```
+
+# Create ggplot to plot sales by month
+```{r create_mon_sold_11}
+ggplot(T_mon_sold_2011, aes(x=Month, y= Revenue, color = Month)) + facet_wrap(~Description, ncol=2) + 
+     geom_bar(stat="identity") +  labs(title = "Sales by month in 2011", x = "Month", y = "Sales Revenue 2011") 
+```
+
+# As the above plot shows, the sales of products changes with time. In terms of month, there are high transaction in December. One of the reasons could be due to the fact that most customers make purchases during holiday seasons.  
+
+# Create ggplot to plot the number of revenue for different hours
+```{r create_rev_diff_hr}
+OnlineRetail2 %>%
+  group_by(HourOfDay) %>%
+  summarise(Revenue = sum(Revenue)) %>%
+  ggplot(aes(x = HourOfDay, y = Revenue, fill = HourOfDay)) + geom_col() + labs(x = 'Number of revenue for different hours', y = 'Revenue', title = 'Number of Revenue')
+```
+
+# In terms of hours, there are no transactions after 8:00pm until the next day at 7:00am. The busiest hour of the day is around 12:00 p.m. One of the reasons could be due to the fact that most customers make purchases during lunch time and also mid-morning (in tea breaks) hour arround 10:00 a.m.
+
+# Create a new dataframe that we can use to look at what's going on at the hour of the day level in a bit more detail.
+```{r create_new_df}
+SummaryOfHourOfDay <- OnlineRetail2 %>%
+  group_by(HourOfDay) %>%
+  summarise(Revenue = sum(Revenue), Transactions = n_distinct(InvoiceNo)) %>%
+  mutate(AveOrder = (round((Revenue / Transactions),2))) %>%
+  ungroup()
+
+head(SummaryOfHourOfDay, n=20)
+```
+
+# As shown the table, the biggest transaction (3130) had made at noon or 12:00 p.m. I think people have made purchase at noon b/c it is lunch time.
+
+# Descriptive statistics in numerical calculations
+# Create median() that displays the middle most value in a data series is called the median.
+```{r create_median}
+# Create median
+median(OnlineRetail2$Revenue)
+```
+
+# Create mean() that uses to sum up of numerical data values divided by data count.
+```{r create_mean}
+# create mean
+mean(OnlineRetail2$Revenue)
+```
+
+# Create var() to display the variance is a numerical measure of how the data values is dispersed around the mean.
+```{r create_variance}
+# Create var
+var(OnlineRetail2$Revenue)
+```
+
+# Create std() to check an observation variable that is the square root of its variance.
+```{r create_stand_dev}
+sd(OnlineRetail2$Revenue)
+```
+
+# Create quantile() is the generic function quantile produces sample quantiles corresponding to the given probabilities. The smallest observation corresponds to a probability of 0 and the largest to a probability of 1.
+```{r create_quantile}
+# Create quantile
+quantile(OnlineRetail2$Revenue)
+```
+
+# Create summary() to check the statistics of the Revenue variable
+```{r create_summary2}
+# summary of Revenue variable
+summary(OnlineRetail2$Revenue)
+```
+
+# Create summary() to check the statistics of the data frame 
+```{r create_summary3}
+# summary of the data frame
+summary(OnlineRetail2)
+```
+
+# Create ggplot for amount of revenue by day of week, number of transactions by day of week and average order value by day of the week
+```{r create_ggplot1}
+# create ggplot fuctions 
+ggplot(SummaryOfWeekDay, aes(x = DayOfWeek, y = Revenue)) + geom_violin(fill = "grey80", colour = "#3366FF") + labs(x = 'Day of the Week', y = 'Revenue', title = 'Revenue by Day of the Week')
+
+ggplot(SummaryOfWeekDay, aes(x = DayOfWeek, y = Transactions, colorspaces)) + geom_violin(fill = "grey80", colour = "#3376FF") + labs(x = 'Day of the Week', y = 'Number of Daily Transactions', title = 'Number of Transactions by Day of the Week')
+
+ggplot(SummaryOfWeekDay, aes(x = DayOfWeek, y = AveOrder, fill = DayOfWeek)) + geom_violin(fill = "grey80", colour = "#3386FF") + labs(x = 'Day of the Week', y = 'Average Order Value', title = 'Average Order Value by Day of the Week')
+
+```
+
+# The amount of revenue of each day of the week is different. Thus, this difference is determined by a difference in the number of transactions, rather than the average order value.
+
+# Create ggplot to plot density to check how these data are distributed 
+```{r create_density_plot}
+#create density plot
+ggplot(SummaryOfWeekDay, aes(Transactions, fill = DayOfWeek)) + geom_density(alpha = 0.2)
+
+```
+# As shown in the above density plot, the tails point to the right indicating a positive skew. There is a reasonable amount of skewness in the distributions.
+
+# Reload data
+```{r load_data}
+#library(whisker)
+
+#specify the path to load the Online Retail excel file
+OnlineRetail3 <- read_excel("C:/Users/owner/Desktop/Regis University/MSDS692/Week 1/Online Retail.xlsx") %>%
+  
+  mutate(Day = parse_date(format(InvoiceDate, "%Y-%m-%d")),
+         Day_of_week = wday(Day, label = TRUE, abbr = FALSE),
+         Time = parse_time(format(InvoiceDate, "%H:%M")),
+         Month = format(InvoiceDate, "%m"),
+         Sales = Quantity * UnitPrice,
+         Sales_return = ifelse(Quantity > 0, "sales", "return"))
+
+```
+
+# Transactions by country: The online retailer is UK-based, but its customers come from all over the world. However, the plots below tell us very quickly that the main customer base is from the UK, followed by Germany and France.
+```{r add_new_variable}
+ctry1 <- OnlineRetail3 %>%
+  filter(Country == "United Kingdom") %>%
+  ggplot(aes(x = Country, fill = Sales)) +
+    geom_bar(alpha = 0.9) +
+    scale_fill_manual(values = palette_dark()) +
+    theme_tq() +
+    theme(axis.text.x = element_text(angle = 45, vjust = 1, hjust = 1)) +
+    guides(fill = FALSE) +
+    labs(x = "")
+
+ctry2 <- OnlineRetail3 %>%
+  filter(Country != "United Kingdom") %>%
+  ggplot(aes(x = Country, fill = Sales)) +
+    geom_bar(alpha = 1.9) +
+    scale_fill_manual(values = palette_dark()) +
+    theme_tq() +
+    theme(legend.position = "right") +
+    theme(axis.text.x = element_text(angle = 45, vjust = 1, hjust = 1)) +
+    labs(x = "",
+         fill = "")
+
+grid.arrange(ctry1, ctry2, widths = c(0.5, 1.5))
+
+```
+
+# On which days of the week did maximum sales occur?
+```{r create_weekDay_sale}
+Max_WeekDay_sale <- filter(OnlineRetail3, !is.na(CustomerID),!is.na(StockCode))
+
+Most_sales <- Max_WeekDay_sale %>% group_by(Max_WeekDay_sale$Day_of_week) %>% summarize(SalesAmount=sum(Sales)) %>% arrange(desc(SalesAmount))
+
+head(Most_sales)
+
+```
+
+# Based on the above output, we know that the day of the week with the most sales was Thursday, with total number of transactions was 1,906,108.2.  The day of the week with the fewest sales was Sundays, with total sales of 784,418.9.
+
+# Which products bring in the most revenue?
+```{r create_prod_most_rev}
+revenue <- OnlineRetail3%>%
+  group_by(OnlineRetail3$StockCode)%>%
+  summarise(Total_Sales=sum(Sales))%>%
+  ungroup()%>%arrange(desc(Total_Sales))
+head(revenue)
+
+```
+
+# Of the various types of products sold there are several products that provide the largest revenue for the company, 6 of which are the selling product code of DOTCOM POSTAGE (DOT), selling at 206245.48, Code 22423 sold at 164762.19, cold 47566 sold at 98302.98, code 85123A sold at 97894.50, code 85099B sold at 92356.03, and code 23084 sold at 66756.59.
+
+# Which customers are repeat purchasers? (group by customer ID and then distinct(DATE)).
+```{r create_rep_customer}
+repeatCustomers<-OnlineRetail3%>%
+  group_by((CustomerID),n_distinct(InvoiceDate))%>%
+  summarise(Count=n())%>%
+  ungroup()%>%arrange()
+head(repeatCustomers)
+
+```
+
+# As with above output, this shows that the six top customers in terms of repeat purchases: were customers 12346, 12347, 12348,12349,12350, and 12352.
+
+# Which hours are most crowded?
+```{r create_sales_hpurs}
+Max_WeekDay_sale$hours_sale <- hour(Max_WeekDay_sale$InvoiceDate)
+PeakHour <- Max_WeekDay_sale %>% 
+  group_by(Max_WeekDay_sale$hours_sale) %>%   summarise(Hour_sales=sum(hours_sale)) %>% arrange(desc(Hour_sales))
+head(PeakHour)
+
+```
+
+# Based on the above output, we know that the most trafficked hour is 12 pm, with 880104 sales, and this activity continues until 3 pm. Sales are also high at 11 and 10.
+
+# Who are the top 6 customers with the most purchases? 
+```{r create_top_6_cust}
+Max_WeekDay_sale %>% group_by(CustomerID) %>% 
+  summarise(Spend=sum(Sales)) %>%
+  arrange(desc(Spend)) %>%head(6)
+
+```
+
+# As in the above output, the customers who make the most purchases are customer who makes the most purchases is customer 14646. The five others are customers 18102, 17450, 14911, 12415, and 14156. 
+
+# Create ggplot to plot purchases/returns per day and time
+```{r create_pur_return}
+OnlineRetail3 %>%
+  ggplot(aes(x = Time, y = Day)) +
+    stat_bin2d(alpha = 0.8, bins = 25, color = "white") +
+    scale_fill_gradientn(colours = c(palette_dark()[[1]], palette_light()[[2]])) +
+    theme_tq() +
+    theme(legend.position = "right") +
+    labs(title = "Purchases/returns per day and time")
+
+```
+
+# As the above plot shows, more transaction (purchases and returns) occurred between November and January because people purchase products to prepare for Christmas and New Year. That is what accounted for the volume of purchases and returns over the holiday season, especially for Christmas. People like to use their lunch hours to shop online.
+
+# Recommendations: Based on the results of the analysis, I would make the following recommendations to the UK online retail or (e-commerce) company as follows:
+#	Provide a bonus or door prize for customers with the highest number of purchases.
+#	Increase the number of staff to help customers, especially for UK
+#	Increase the number of staff with shifts on Thursday, especially at 12 pm.
+#	Increase stock of the highest selling products. 
+#	The company may need to hire temp employee over the holiday season.
+#	Update their websites and database frequently.  
+#	Ensure that the website (platform) is as user-friendly as possible.  
+
