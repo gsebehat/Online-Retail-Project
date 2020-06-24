@@ -93,23 +93,23 @@ Explore the data set and we encounter the need we will pre-process the data set 
 
 ![alt text](https://github.com/gsebehat/Online-Retail-Project/blob/master/Images/Picture%205.jpg)
 
-![alt text](https://github.com/gsebehat/Online-Retail-Project/blob/master/Images/Picture%205.1.jpg)
+![alt text](https://github.com/gsebehat/Online-Retail-Project/blob/master/Images/Picture%206.jpg)
 
 As the above result shows, Customer ID variable has 135080 NAs
 
-![alt text](https://github.com/gsebehat/Online-Retail-Project/blob/master/Images/Picture%206.jpg)
-
 ![alt text](https://github.com/gsebehat/Online-Retail-Project/blob/master/Images/Picture%207.jpg)
 
-![](RackMultipart20200624-4-1atjyy4_html_a6ebd0f859a7726b.png)
+![alt text](https://github.com/gsebehat/Online-Retail-Project/blob/master/Images/Picture%208.jpg)
 
-![](RackMultipart20200624-4-1atjyy4_html_9af8bc587425f744.png)
+![alt text]()
+
+![alt text]()
 
 Looking at the size of the dataset and the missing value plot, it seems as if I can remove the missing values and still have a good-sized set of data to work on, I thus let me remove the missing values
 
 Remove NAs
 
-![](RackMultipart20200624-4-1atjyy4_html_d1d0d2e66e516b95.png)
+![alt text]()
 
 **Pre-processing\_2**
 
@@ -117,17 +117,17 @@ Remove NAs
 - Create &quot;Month&quot;, &quot;Month\_Yr&quot;, Year&quot;, &quot;Day&quot;, &quot;HourOfDay&quot; and &quot;DayOfWeek&quot; variables to work with future analysis
 - add a new variable for &quot;Revenue&quot; (unit price \* quantity).
 
-![](RackMultipart20200624-4-1atjyy4_html_da8f0fe36d0c1fb2.png)
+![alt text]()
 
-![](RackMultipart20200624-4-1atjyy4_html_5d3dd0bddf66f1cb.png)
+![alt text]()
 
-![](RackMultipart20200624-4-1atjyy4_html_69d8bdb81aa458e.png)
+![alt text]()
 
-![](RackMultipart20200624-4-1atjyy4_html_f3d14ff2be14d368.png)
+![alt text]()
 
-![](RackMultipart20200624-4-1atjyy4_html_1610f326464ed79e.png)
+![alt text]()
 
-![](RackMultipart20200624-4-1atjyy4_html_5d7f773becbc513b.png)
+![alt text]()
 
 **Explanatory data analysis (EDA)**
 
@@ -135,99 +135,99 @@ Remove NAs
 - Avoids any potential anomalies in data to avoid feeding incorrect data to a machine learning model
 - Clarify the model output and test the assumptions
 
-![](RackMultipart20200624-4-1atjyy4_html_dc1cef08a4254db5.png)
+![alt text]()
 
 Based on the above output we know that the numbers of customers from Australia is 1182, from Austria is 398, from Bahrain is 17, from Germany is 9040, from Saudi Arabia is 9 and so on. So, the country with the most customers is in the United Kingdom with 354321 customers.
 
 Plot frequency distribution of customers based on each Country:
 
-![](RackMultipart20200624-4-1atjyy4_html_204edbad9f904647.png)
+![alt text]()
 
 The topmost Countries contributing to revenue in 2010 and 2011:
 
-![](RackMultipart20200624-4-1atjyy4_html_68b06476aa2ca794.png)
+![alt text]()
 
-![](RackMultipart20200624-4-1atjyy4_html_372fdd7b95466c5a.png)
+![alt text]()
 
 Top 6 Selling products by sales revenue in 2010 and 2011:
 
-![](RackMultipart20200624-4-1atjyy4_html_2810c17f7b695cf4.png)
+![alt text]()
 
 As the above ggplot shows, the &quot;Regency cake stand 3 tier&quot; has the most sales revenue in 2010.
 
-A ![](RackMultipart20200624-4-1atjyy4_html_4e0489cb966b5da0.png) s the above ggplot shows, the &quot;Paper craft, Little birdie&quot; has the most sales revenue in 2011.
+A ![alt text]() s the above ggplot shows, the &quot;Paper craft, Little birdie&quot; has the most sales revenue in 2011.
 
 **Revenue by day of the week**
 
-![](RackMultipart20200624-4-1atjyy4_html_70e996041e502585.png)
+![alt text]()
 
 There were no transactions on Saturday throughout the whole period. I think behind the scenes there are an issue in the context of the metadata of the dataset. As shown in the above plot, a trend where the number of transaction increases from Sunday to Tuesday and decreases on Wednesday. Again, the trend for the number of transaction increases from Wednesday to Friday.
 
 Below I create a new data frame that can be used to look at what&#39;s going on at the day-of-the week level in a bit more detail.
 
-![](RackMultipart20200624-4-1atjyy4_html_479c18730c539ea9.png)
+![alt text]()
 
 As shown in the above table, the greatest number of transactions (137) was made on Thursday.
 
 Monthly performance of the top six-selling products in 2010
 
-![](RackMultipart20200624-4-1atjyy4_html_5820acaeebca9bfb.png)Monthly performance of the top six-selling products in 2011
+![alt text]() Monthly performance of the top six-selling products in 2011
 
-![](RackMultipart20200624-4-1atjyy4_html_2afa873b025ca796.png)
+![alt text]()
 
 As the above plot shows, the sales of products changes over time. In terms of months, there were high number of transactions in December. This could be partly due to the fact that most customers make purchases during the holiday season.
 
 Amount of revenue by hour:
 
-![](RackMultipart20200624-4-1atjyy4_html_96e4a138aad5c25c.png)
+![alt text]()
 
 In terms of hours, there are no transactions after 8:00pm until the next day at 7:00am. The busiest hour of the day is around 12:00 p.m. One of the reasons could be due to the fact that most customers make purchases during lunch time and also mid-morning (in tea breaks) hour around 10:00 a.m.
 
-![](RackMultipart20200624-4-1atjyy4_html_a11e49ced5d2475.png)
+![alt text]()
 
-![](RackMultipart20200624-4-1atjyy4_html_a02fa2fc9d5b14c8.png)
+![alt text]()
 
-![](RackMultipart20200624-4-1atjyy4_html_7fe6d27cbcccf817.png)
+![alt text]()
 
 As shows the above plots, the amount of revenue of each day of the week is different. Thus, this difference is determined by a difference in the number of transactions, rather than the average order value.
 
 Density plot to check how these data are distributed:
 
-![](RackMultipart20200624-4-1atjyy4_html_c8bdbdd666fc8cb6.png)
+![alt text]()
 
 As shown in the above density plot, the tails point to the right indicating a positive skew. There is a reasonable amount of skewness in the distributions.
 
 Transactions by country: The online retailer is UK-based, but its customers come from all over the world. However, the plots below tell us very quickly that the main customer base is from the UK, followed by Germany and France.
 
-![](RackMultipart20200624-4-1atjyy4_html_ab048f192743c993.png)
+![alt text]()
 
 **Which products bring in the most revenue?**
 
-![](RackMultipart20200624-4-1atjyy4_html_6c0544210ea6e35a.png)
+![alt text]()
 
 Of the various types of products sold there are several products that provide the largest revenue for the company, 6 of which are the selling product code of DOTCOM POSTAGE (DOT), selling at 206245.48, Code 22423 sold at 164762.19, cold 47566 sold at 98302.98, code 85123A sold at 97894.50, code 85099B sold at 92356.03, and code 23084 sold at 66756.59.
 
 Which customers are repeat purchasers?
 
-![](RackMultipart20200624-4-1atjyy4_html_864afb0cef91ed21.png)
+![alt text]()
 
 As with above output, this shows that the six top customers in terms of repeat purchases: were customers 12346, 12347, 12348,12349,12350, and 12352.
 
 Which hours are most crowded?
 
-![](RackMultipart20200624-4-1atjyy4_html_18d160f6350ce977.png)
+![alt text]()
 
 Based on the above output, we know that the most trafficked hour is 12 pm, with 880104 sales, and this activity continues until 3 pm. Sales are also high at 11 and 10.
 
 Who are the top 6 customers with the most purchases?
 
-![](RackMultipart20200624-4-1atjyy4_html_2febb6615196f7fb.png)
+![alt text]()
 
 As in the above output, the customers who make the most purchases are customer who makes the most purchases is customer 14646. The five others are customers 18102, 17450, 14911, 12415, and 14156.
 
 Create ggplot to plot purchases/returns per day and time
 
-![](RackMultipart20200624-4-1atjyy4_html_14f63fb206fe371a.png)
+![alt text]()
 
 As the above plot shows, more transaction (purchases and returns) occurred between November and January because people purchase products to prepare for Christmas and New Year. That is what accounted for the volume of purchases and returns over the holiday season, especially for Christmas. People like to use their lunch hours to shop online.
 
@@ -245,15 +245,15 @@ As the above plot shows, more transaction (purchases and returns) occurred betwe
 
 Correlation matrix: x = Quantity and y = Revenue
 
-![](RackMultipart20200624-4-1atjyy4_html_6005bb440f895dbb.png)
+![alt text]()
 
 **Create correlation plot**
 
-![](RackMultipart20200624-4-1atjyy4_html_6af745ea3e2de875.png)
+![alt text]()
 
 **Correlation plot**
 
-![](RackMultipart20200624-4-1atjyy4_html_29fb857a626bc19b.png)
+![alt text]()
 
 **Clustering**
 
@@ -278,19 +278,19 @@ For the scope of this project, RFM was defined as follows:
 
 **The recency statistic indicates how long a customer has been**  **inactive****.**
 
-![](RackMultipart20200624-4-1atjyy4_html_46369964b8763a09.png)
+![alt text]()
 
 As the above summary of statistics shows, 50% of the site&#39;s users show fewer than 49 days of inactivity. On average, however, customers went three months without making a single purchase, and a small number of customers had not made a single transaction in over a year. 50% of the users had fewer than 49 days of inactivity.
 
 **Recency Histogram**
 
-![](RackMultipart20200624-4-1atjyy4_html_f5f35a5d1d56fdb6.png)
+![alt text]()
 
 Based on the above histogram, most clients have been active over the last 90-100 days. There are no benchmarks to compare this with, but three months of customer inactivity does not sound terrible, especially after it was discovered in the previous analysis that the company has not been acquiring users as quickly as it used to. However, some of these customers have gone over 140 days without making a single purchase.
 
 **Frequency Statistics**
 
-![](RackMultipart20200624-4-1atjyy4_html_2c2888d26ce7ec5d.png)
+![alt text]()
 
 The above results show how often customers purchased from the online retailer. Customers make an average of 90 transactions a year, with 75% of users making fewer than 100 purchases a year. As shown in the above statistical summary, there are big difference between the 3rd quartile (99) and the maximum number of purchases (7,812).
 
@@ -298,17 +298,17 @@ Frequency Boxplot: Since there is a remarkable difference between the above freq
 
 **Frequency boxplot graph showing customers in the third quartile**
 
-![](RackMultipart20200624-4-1atjyy4_html_10283889c664f097.png)
+![alt text]()
 
 **Frequency boxplot graph showing customers in the fourth quartile**
 
-![](RackMultipart20200624-4-1atjyy4_html_8d7590ea5fc0e62a.png)
+![alt text]()
 
 Monetary Value: Finally, the last calculation to build before creating the cluster segmentation model is Monetary Value. This refers to the total sum of revenue generated by a given user over the course of a year.
 
 **Monetary Value Statistics**
 
-![](RackMultipart20200624-4-1atjyy4_html_450d6619217ff7c6.png)
+![alt text]()
 
 As the above results show, there are customers who have negative revenue that is, apparently there are negative numbers in the price column. This could suggest purchase returns, and this is an important assumption to keep in mind as we continue to work on the segmentation.
 
@@ -316,15 +316,15 @@ As the above results show, there are customers who have negative revenue that is
 
 Plot two sets of users. The first histogram shows Customers below the 3rd Quartile
 
-![](RackMultipart20200624-4-1atjyy4_html_a3f5bcc6cfd8584a.png)
+![alt text]()
 
 **Customers with revenue greater than 15k a year**
 
-![](RackMultipart20200624-4-1atjyy4_html_ca9dd070b4bacbb2.png)
+![alt text]()
 
 There are three different clusters based on customers&#39; behavior with the Online Retailer. We can examine the differences in these clusters in order to identify high value customers, medium value customers, and low value customers.
 
-![](RackMultipart20200624-4-1atjyy4_html_8ed6ac3c012f71bc.png)
+![alt text]()
 
 Below is a description of the above three customer segments:
 
@@ -352,7 +352,7 @@ Below is a description of the above three customer segments:
 
 Create histogram that displays number of clusters:
 
-![](RackMultipart20200624-4-1atjyy4_html_992a778d094a66b3.png)
+![alt text]()
 
 **Summary - KMeans Segmentation** : Customers of the business have been clearly identified into three groups using the KMeans clustering algorithm.
 
@@ -370,7 +370,7 @@ How to read the graph below:
 
 **Hierarchical Segmentation**
 
-![](RackMultipart20200624-4-1atjyy4_html_632d5a6239fd56ec.png)
+![alt text]()
 
 **Summary of hierarchical segmentation**
 
@@ -391,15 +391,15 @@ I think the executive and management team can take further strategic actions to 
 - I built and compared the following three models based on the results: a random forest model, a knn model, and a linear regression model.
 - Random forest model
 
-![](RackMultipart20200624-4-1atjyy4_html_9766425d536c11d1.png)
+![alt text]()
 
 - KNN model
 
-![](RackMultipart20200624-4-1atjyy4_html_7d9aace0637a2a21.png)
+![alt text]()
 
 - Linear regression model
 
-![](RackMultipart20200624-4-1atjyy4_html_3c52adec2f35bc08.png)
+![alt text]()
 
 Comparing Models
 
