@@ -26,7 +26,6 @@ The objective of this project is to analyze the data to help the organization to
 - Use clustering to find interesting groups of customers
 - Compare the performance of these methods
 - Recommend strategies for the organization
-- Produce a report
 
 **Perform the analysis and discussion of this data set as per below sections:**
 
